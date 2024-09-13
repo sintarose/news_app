@@ -44,7 +44,7 @@ class DataController extends ChangeNotifier {
 
   fetchNewsFromAPI() async {
     final response = await dio.get(
-        'https://newsapi.org/v2/everything?q=bitcoin&from=2024-06-25&sortBy=publishedAt&apiKey=bd9934c750314feeb1fe65d556c9888c');
+        'https://newsapi.org/v2/everything?q=bitcoin&from=2024-08-25&sortBy=publishedAt&apiKey=bd9934c750314feeb1fe65d556c9888c');
     if (response.statusCode == 200) {
       dataModel = NewsApiModel.fromJson(response.data);
       isLoading = false;

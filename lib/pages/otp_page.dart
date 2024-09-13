@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_app/pages/otp_page.dart'; // Import OTP page
+import 'package:news_app/pages/home_page.dart';
 import 'package:news_app/utils/appbar.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class OTPPage extends StatelessWidget {
+  OTPPage({super.key});
+
+  final _otpFormKey = GlobalKey<FormState>();
+  final _otpController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-
     return Scaffold(
       appBar: appBar(),
       body: Form(
-        key: formKey,
+        key: _otpFormKey,
         autovalidateMode: AutovalidateMode.always,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -22,17 +23,19 @@ class LoginPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
-                keyboardType: TextInputType.phone,
+                controller: _otpController,
+                keyboardType: TextInputType.number,
+                maxLength: 3, // Assuming OTP is 3 digits
                 decoration: InputDecoration(
-                  labelText: 'Phone Number',
+                  labelText: 'Enter OTP',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(10.0), // curved border
                     borderSide: const BorderSide(
                       color: Colors.blueGrey,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(10.0), // curved border
                     borderSide: const BorderSide(
                       color: Colors.black,
                     ),
@@ -40,15 +43,13 @@ class LoginPage extends StatelessWidget {
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter your phone number';
-                  } else if (!GetUtils.isPhoneNumber(value)) {
-                    return 'Please enter a valid phone number';
-                  } else {
-                    return null;
+                    return 'Please enter OTP';
+                  } else if (value.length != 3) {
+                    return 'OTP must be 3 digits';
                   }
+                  return null;
                 },
               ),
-             
               const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -56,20 +57,21 @@ class LoginPage extends StatelessWidget {
                   alignment: Alignment.center,
                 ),
                 onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    formKey.currentState!.save();
-                    Get.to(OTPPage()); // Navigate to OTPPage
-                    formKey.currentState!.reset();
+                  if (_otpFormKey.currentState!.validate()) {
+                    _otpFormKey.currentState!.save();
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                      (route) => false,
+                    );
+                    Get.to(const ());
+                    _otpFormKey.currentState!.reset();
                   }
                 },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Login',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
+                child: const Text(
+                  'Verify OTP',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],
